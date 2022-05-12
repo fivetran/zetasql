@@ -37,4 +37,4 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Build
-        run: bazel build //zetasql/local_service:libremote_server.dylib --copt="-Wno-error=c99-extensions"
+        run: bazel build ...
