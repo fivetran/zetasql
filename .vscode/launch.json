@@ -1,0 +1,21 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // "preLaunchTask": "Bazel Build (Debug)",
+      "name": "CodeLLDB",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/bazel-bin/${relativeFileDirname}/${fileBasenameNoExtension}",
+      "args": ["select 1 + 1;"],
+      "sourceMap": {
+        ".": "${workspaceFolder}"
+      },      
+      // "stopOnEntry": true,
+      "preRunCommands": ["breakpoint set -f ${workspaceFolder}/zetasql/tools/execute_query/execute_query.cc -l 95", "breakpoint list --verbose"]
+    }
+  ]
+}
