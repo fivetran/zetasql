@@ -39,3 +39,9 @@ extern "C" void RunServer(int port) {
 }
 }
 }
+
+int main(int argc, char* argv[]) {
+  std::string port = argv[1];
+  zetasql::local_service::RunServer(std::stoi(port));
+  return 0;
+}
