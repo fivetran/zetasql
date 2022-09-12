@@ -27,7 +27,7 @@ jobs:
       - name: build
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker buildx build --output out --platform linux/amd64 .
+          docker buildx build --output out --platform linux/arm64 .
 
       - name: upload artifacts
         uses: actions/upload-artifact@v3
