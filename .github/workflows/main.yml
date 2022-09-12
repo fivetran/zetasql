@@ -27,7 +27,7 @@ jobs:
       - name: build
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker buildx build --output out --platform linux/amd64,linux/arm64 .
+          docker buildx build --output out --platform linux/amd64 .
 
       - name: upload artifacts
         uses: actions/upload-artifact@v3
@@ -49,10 +49,15 @@ jobs:
           npx @bazel/bazelisk build //zetasql/local_service:libremote_server.dylib
           install_name_tool -id "@loader_path/libremote_server.dylib" bazel-bin/zetasql/local_service/libremote_server.dylib
 
+      - name: move file to out folder
+        run: |
+          mkdir -p out/darwin/x86_64
+          mv bazel-bin/zetasql/local_service/libremote_server.dylib out/darwin/x86_64
+
       - name: upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: artifacts
           path: |
-            bazel-bin/zetasql/local_service/libremote_server.dylib
+            out/darwin/x86_64
             **/*.proto
