@@ -234,6 +234,7 @@ cc_binary(
     srcs = [
         "remote_server.cc",
     ],
+    linkstatic = 1,
     visibility = ["//visibility:public"],
     deps = [
         ":local_service_grpc",
