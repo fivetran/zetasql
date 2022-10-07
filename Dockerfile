@@ -18,7 +18,7 @@ RUN apt-get update \
   && apt-get autoremove -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
-RUN npx @bazel/bazelisk build //zetasql/local_service:libremote_server.so
+RUN npx @bazel/bazelisk build --copt "-O3" //zetasql/local_service:libremote_server.so
 
 FROM alpine
 ARG TARGETPLATFORM
