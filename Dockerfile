@@ -18,8 +18,9 @@ RUN apt-get update \
   && apt-get autoremove -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
-RUN npx @bazel/bazelisk build --copt "-O3" //zetasql/local_service:libremote_server.so
+RUN npx @bazel/bazelisk build --copt "-O3" //zetasql/local_service:libremote_server.so //zetasql/local_service:remote_server_executable
 
 FROM alpine
 ARG TARGETPLATFORM
 COPY --from=linux-builder /build/bazel-bin/zetasql/local_service/libremote_server.so ${TARGETPLATFORM}/libremote_server.so
+COPY --from=linux-builder /build/bazel-bin/zetasql/local_service/remote_server_executable ${TARGETPLATFORM}/remote_server_executable
