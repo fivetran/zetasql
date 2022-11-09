@@ -27,7 +27,7 @@ jobs:
       - name: build
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker buildx build --output out --platform linux/amd64 .
+          docker buildx build --file Dockerfile.build --output out --platform linux/amd64 .
           # for linux/arm64 it is very slow and we can't use it now
 
       - name: upload artifacts
@@ -47,7 +47,7 @@ jobs:
 
       - name: build
         run: |
-          npx @bazel/bazelisk build --copt "-O3" //zetasql/local_service:libremote_server.dylib
+          npx @bazel/bazelisk build --copt "-O3" --config=clang //zetasql/local_service:libremote_server.dylib
           install_name_tool -id "@loader_path/libremote_server.dylib" bazel-bin/zetasql/local_service/libremote_server.dylib
 
       - name: move file to out folder
