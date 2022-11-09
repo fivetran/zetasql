@@ -45,6 +45,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - uses: maxim-lobanov/setup-android-tools@v1
+        with:
+          packages: |
+            platforms;android-30
+
       - name: build
         run: |
           npx @bazel/bazelisk build --copt "-O3" //zetasql/local_service:libremote_server.dylib
