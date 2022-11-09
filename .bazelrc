@@ -22,6 +22,7 @@
 # suppression you can invoke with --config=clang
 build:clang --action_env=BAZEL_CXXOPTS="-std=c++17"
 build:clang --cxxopt=-std=c++17
+build:clang --host_cxxopt="-std=c++17"
 build:clang --cxxopt=-Wno-deprecated-declarations
 build:clang --cxxopt=-Wno-range-loop-analysis
 build:clang --cxxopt=-Wno-inconsistent-missing-override
@@ -39,6 +40,7 @@ build:clang --cxxopt=-Wno-macro-redefined
 # suppression you can invoke with --config=g++
 build:g++ --action_env=BAZEL_CXXOPTS="-std=c++17"
 build:g++ --cxxopt=-std=c++17
+build:g++ --host_cxxopt="-std=c++17"
 build:g++ --cxxopt=-Wno-sign-compare
 build:g++ --cxxopt=-Wno-switch
 build:g++ --cxxopt=-Wno-unused-function
