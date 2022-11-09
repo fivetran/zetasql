@@ -39,7 +39,7 @@ jobs:
             out/linux/arm64
 
   build-macos:
-    runs-on: macos-latest
+    runs-on: macos-12
 
     steps:
       - name: checkout
