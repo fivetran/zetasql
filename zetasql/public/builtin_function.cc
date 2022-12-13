@@ -160,6 +160,11 @@ absl::Status GetZetaSQLFunctionsAndTypes(
     ZETASQL_RETURN_IF_ERROR(
         GetArrayFindFunctions(type_factory, options, functions, types));
   }
+
+  /* Snowflake functions START */
+  GetSnowflakeBitwiseFunctions(type_factory, options, functions);
+  /* Snowflake functions END */
+
   return absl::OkStatus();
 }
 
