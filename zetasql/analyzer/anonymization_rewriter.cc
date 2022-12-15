@@ -2206,7 +2206,7 @@ std::unique_ptr<ResolvedScan> MakePerUserAggregateScan(
   return MakeResolvedAggregateScan(
       new_column_list, std::move(input_scan), std::move(group_by_list),
       std::move(aggregate_list),
-      /* grouping_set_list= */ {}, /* rollup_column_list= */ {});
+      /* grouping_set_list= */ {}, /* rollup_column_list= */ {}, /*grouping_sets_column_list=*/{});
 }
 
 absl::StatusOr<std::unique_ptr<const ResolvedExpr>>

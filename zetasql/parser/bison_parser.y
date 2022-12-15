@@ -797,6 +797,7 @@ using zetasql::ASTDropStatement;
 %token KW_ROWS "ROWS"
 %token KW_SELECT "SELECT"
 %token KW_SET "SET"
+%token KW_SETS "SETS"
 %token KW_STRUCT "STRUCT"
 %token KW_TABLESAMPLE "TABLESAMPLE"
 %token KW_THEN "THEN"
@@ -1301,6 +1302,7 @@ using zetasql::ASTDropStatement;
 %type <node> opt_group_by_clause
 %type <node> generic_entity_body
 %type <node> opt_generic_entity_body
+%type <node> grouping_sets_list
 %type <node> having_clause
 %type <node> opt_having_clause
 %type <node> opt_having_modifier
@@ -5757,12 +5759,27 @@ rollup_list:
       }
     ;
 
+grouping_sets_list:
+    "GROUPING" "SETS" "(" expression
+      {
+        $$ = MAKE_NODE(ASTGroupingSets, @$, {$4});
+      }
+    | grouping_sets_list "," expression
+      {
+        $$ = WithExtraChildren($1, {$3});
+      }
+    ;
+
 grouping_item:
     expression
       {
         $$ = MAKE_NODE(ASTGroupingItem, @$, {$1});
       }
     | rollup_list ")"
+      {
+        $$ = MAKE_NODE(ASTGroupingItem, @$, {parser->WithEndLocation($1, @$)});
+      }
+    | grouping_sets_list ")"
       {
         $$ = MAKE_NODE(ASTGroupingItem, @$, {parser->WithEndLocation($1, @$)});
       }

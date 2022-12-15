@@ -2600,6 +2600,12 @@ value.
               'ResolvedColumnRef',
               tag_id=6,
               vector=True,
+              ignorable=IGNORABLE_DEFAULT),
+          Field(
+              'grouping_sets_column_list',
+              'ResolvedColumnRef',
+              tag_id=7,
+              vector=True,
               ignorable=IGNORABLE_DEFAULT)
       ])
   gen.AddNode(

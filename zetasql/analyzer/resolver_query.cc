@@ -475,11 +475,14 @@ absl::Status Resolver::AddAggregateScan(
   }
 
   std::vector<std::unique_ptr<const ResolvedColumnRef>> rollup_column_list;
+  std::vector<std::unique_ptr<const ResolvedColumnRef>> grouping_sets_column_list;
   std::vector<std::unique_ptr<const ResolvedGroupingSet>> grouping_set_list;
 
   // Retrieve the grouping sets and rollup list for the aggregate scan, if any.
   query_resolution_info->ReleaseGroupingSetsAndRollupList(&grouping_set_list,
                                                           &rollup_column_list);
+  query_resolution_info->ReleaseGroupingSetsAndGroupByGroupingSetsList(&grouping_set_list,
+                                                                       &grouping_sets_column_list);
 
   ZETASQL_RET_CHECK(!column_list.empty());
   std::unique_ptr<ResolvedAggregateScan> aggregate_scan =
@@ -487,7 +490,8 @@ absl::Status Resolver::AddAggregateScan(
           column_list, std::move(*current_scan),
           query_resolution_info->release_group_by_columns_to_compute(),
           query_resolution_info->release_aggregate_columns_to_compute(),
-          std::move(grouping_set_list), std::move(rollup_column_list));
+          std::move(grouping_set_list), std::move(rollup_column_list),
+          std::move(grouping_sets_column_list));
   // If the feature is not enabled, any collation annotation that might exist on
   // the grouping expressions is ignored.
   if (language().LanguageFeatureEnabled(FEATURE_V_1_3_COLLATION_SUPPORT)) {
@@ -523,6 +527,10 @@ absl::Status Resolver::AddAnonymizedAggregateScan(
   if (query_resolution_info->HasGroupByRollup()) {
     return MakeSqlErrorAt(select->group_by()->grouping_items(0)->rollup())
            << "GROUP BY ROLLUP is not supported in anonymization queries";
+  }
+  if (query_resolution_info->HasGroupByGroupingSets()) {
+    return MakeSqlErrorAt(select->group_by()->grouping_items(0)->grouping_sets())
+            << "GROUP BY GROUPING SETS is not supported in anonymization queries";
   }
   ZETASQL_RET_CHECK(query_resolution_info->select_with_mode() ==
                 SelectWithMode::ANONYMIZATION ||
@@ -3206,6 +3214,7 @@ absl::Status Resolver::ResolveGroupByExprs(
   // other items in the list is supported.
   std::vector<const ASTExpression*> grouping_expressions;
   bool is_rollup = false;
+  bool is_grouping_sets = false;
   if (group_by->grouping_items().size() == 1 &&
       group_by->grouping_items()[0]->rollup() != nullptr) {
     const ASTRollup* rollup = group_by->grouping_items()[0]->rollup();
@@ -3216,6 +3225,13 @@ absl::Status Resolver::ResolveGroupByExprs(
         rollup->expressions();
     grouping_expressions.assign(expressions.begin(), expressions.end());
     is_rollup = true;
+  } else if (group_by->grouping_items().size() == 1 &&
+             group_by->grouping_items()[0]->grouping_sets() != nullptr) {
+    const ASTGroupingSets* grouping_sets = group_by->grouping_items()[0]->grouping_sets();
+    const absl::Span<const ASTExpression* const>& expressions =
+        grouping_sets->expressions();
+    grouping_expressions.assign(expressions.begin(), expressions.end());
+    is_grouping_sets = true;
   } else {
     // Ensure that there is no ROLLUP in the list, and build the list of
     // expressions.
@@ -3231,6 +3247,11 @@ absl::Status Resolver::ResolveGroupByExprs(
                  << "The GROUP BY clause only supports ROLLUP when there are "
                     "no other grouping elements";
         }
+      }
+      if (ast_grouping_item->grouping_sets() != nullptr) {
+        return MakeSqlErrorAt(ast_grouping_item->grouping_sets())
+                 << "The GROUP BY clause only supports GROUPING SETS when there are "
+                    "no other grouping elements";
       }
       ZETASQL_RET_CHECK(ast_grouping_item->expression() != nullptr);
       grouping_expressions.push_back(ast_grouping_item->expression());
@@ -3309,7 +3330,7 @@ absl::Status Resolver::ResolveGroupByExprs(
         // We are already grouping by this SELECT list column, so we do not need
         // to do more unless the query uses GROUP BY ROLLUP, in which case we
         // need to add another entry in the rollup list for it.
-        if (!is_rollup) {
+        if (!is_rollup && !is_grouping_sets) {
           continue;
         }
 
@@ -3329,7 +3350,12 @@ absl::Status Resolver::ResolveGroupByExprs(
             << group_by_column_state->resolved_select_column.DebugString();
         // Field paths may repeat inside the rollup list. We have already
         // resolved this field path, so just add another entry for it.
-        query_resolution_info->AddRollupColumn(existing_computed_column);
+        if (is_rollup) {
+          query_resolution_info->AddRollupColumn(existing_computed_column);
+        }
+        if (is_grouping_sets) {
+          query_resolution_info->AddGroupingSetsColumn(existing_computed_column);
+        }
         continue;
       }
       ZETASQL_RETURN_IF_ERROR(HandleGroupBySelectColumn(
@@ -3355,6 +3381,9 @@ absl::Status Resolver::ResolveGroupByExprs(
             group_by_column, std::move(resolved_expr));
     if (is_rollup) {
       query_resolution_info->AddRollupColumn(computed_column);
+    }
+    if (is_grouping_sets) {
+      query_resolution_info->AddGroupingSetsColumn(computed_column);
     }
   }
 
