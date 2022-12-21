@@ -82,8 +82,8 @@ class MapFunctionVisitor : public ResolvedASTDeepCopyVisitor {
       WHEN k IS NULL THEN NULL
       -- 'value' fields are present by proto2+3 definition, so nulls are only
       -- possible when the key is absent.
-      ELSE IFNULL( ( SELECT elem.value FROM UNNEST(m) elem WITH OFFSET offset
-                     WHERE elem.key = k ORDER BY offset DESC LIMIT 1 ),
+      ELSE IFNULL( ( SELECT elem.value FROM UNNEST(m) elem WITH OFFSET offset_idx
+                     WHERE elem.key = k ORDER BY offset_idx DESC LIMIT 1 ),
                    -- If the key isn't found, then it's an error.
                    ERROR(FORMAT("Key not found in map: %T", k)) )
     END
@@ -92,8 +92,8 @@ class MapFunctionVisitor : public ResolvedASTDeepCopyVisitor {
     CASE
       WHEN m IS NULL THEN NULL
       WHEN k IS NULL THEN NULL
-      ELSE ( SELECT elem.value FROM UNNEST(m) elem WITH OFFSET offset
-             WHERE elem.key = k ORDER BY offset DESC LIMIT 1 )
+      ELSE ( SELECT elem.value FROM UNNEST(m) elem WITH OFFSET offset_idx
+             WHERE elem.key = k ORDER BY offset_idx DESC LIMIT 1 )
     END
     )sql";
 
@@ -181,7 +181,7 @@ class MapFunctionVisitor : public ResolvedASTDeepCopyVisitor {
                     -- Generate the modifications list, grouped by key.
                     SELECT mod.key, ARRAY_AGG(mod.value) AS values, MIN(offset)
                         AS offset
-                    FROM UNNEST(modifications) mod WITH OFFSET offset
+                    FROM UNNEST(modifications) mod WITH OFFSET offset_idx
                     GROUP BY mod.key
                   ) AS agg_mods
               ) AS chosen_mods

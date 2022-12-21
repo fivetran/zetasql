@@ -777,6 +777,7 @@ using zetasql::ASTDropStatement;
 %token KW_MERGE "MERGE"
 %token KW_NATURAL "NATURAL"
 %token KW_NEW "NEW"
+%token KW_NEXT "NEXT"
 %token KW_NO "NO"
 %token KW_NOT "NOT"
 %token KW_NULL "NULL"
@@ -1316,6 +1317,9 @@ using zetasql::ASTDropStatement;
 %type <node> opt_like_string_literal
 %type <node> opt_like_path_expression
 %type <node> opt_limit_offset_clause
+%type <node> opt_row_rows_clause
+%type <node> opt_first_next_clause
+%type <node> opt_only_clause
 %type <node> opt_on_or_using_clause_list
 %type <node> on_or_using_clause_list
 %type <node> on_or_using_clause
@@ -5876,9 +5880,35 @@ qualify_clause_nonreserved:
       }
     ;
 
+opt_row_rows_clause:
+    KW_ROW
+    | KW_ROWS
+    | /* Nothing */
+    ;
+
+opt_first_next_clause:
+    KW_FIRST
+    | KW_NEXT
+    | /* Nothing */
+    ;
+
+opt_only_clause:
+    KW_ONLY
+    | /* Nothing */
+    ;
+
 opt_limit_offset_clause:
-    "LIMIT" possibly_cast_int_literal_or_parameter
-    "OFFSET" possibly_cast_int_literal_or_parameter
+    "OFFSET" possibly_cast_int_literal_or_parameter opt_row_rows_clause
+    "FETCH" opt_first_next_clause possibly_cast_int_literal_or_parameter opt_row_rows_clause opt_only_clause
+      {
+        $$ = MAKE_NODE(ASTOffsetFetch, @$, {$6, $2});
+      }
+    | "FETCH" opt_first_next_clause possibly_cast_int_literal_or_parameter opt_row_rows_clause opt_only_clause
+      {
+        $$ = MAKE_NODE(ASTOffsetFetch, @$, {$3});
+      }
+    | "LIMIT" possibly_cast_int_literal_or_parameter
+      "OFFSET" possibly_cast_int_literal_or_parameter
       {
         $$ = MAKE_NODE(ASTLimitOffset, @$, {$2, $4});
       }
@@ -8506,7 +8536,7 @@ keyword_as_identifier:
     | "MODULE"
     | "NUMBER"
     | "NUMERIC"
-    | "OFFSET"
+//    | "OFFSET"
     | "ONLY"
     | "OPTIONS"
     | "OUT"

@@ -436,6 +436,8 @@ class Algebrizer {
       const ResolvedLimitOffsetScan* scan);
   absl::StatusOr<std::unique_ptr<RelationalOp>> AlgebrizeTopScan(
       const ResolvedTopScan* scan);
+  absl::StatusOr<std::unique_ptr<RelationalOp>> AlgebrizeOffsetFetchScan(
+      const ResolvedOffsetFetchScan* scan);
   absl::StatusOr<std::unique_ptr<RelationalOp>> AlgebrizeWithScan(
       const ResolvedWithScan* scan);
   absl::StatusOr<std::unique_ptr<RelationalOp>> AlgebrizeWithRefScan(
