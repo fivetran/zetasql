@@ -817,7 +817,6 @@ using zetasql::ASTDropStatement;
 
 // These keywords may not be used in the grammar currently but are reserved
 // for future use.
-%token KW_CONTAINS "CONTAINS"
 %token KW_CUBE "CUBE"
 %token KW_ESCAPE "ESCAPE"
 %token KW_EXCLUDE "EXCLUDE"
