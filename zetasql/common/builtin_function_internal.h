@@ -822,6 +822,10 @@ void GetSnowflakeConversionFunctions(TypeFactory* type_factory,
                                      const ZetaSQLBuiltinFunctionOptions& options,
                                      NameToFunctionMap* functions);
 
+void GetSnowflakeDataGenerationFunctions(TypeFactory* type_factory,
+                                         const ZetaSQLBuiltinFunctionOptions& options,
+                                         NameToFunctionMap* functions);
+
 void GetSnowflakeStringAndBinaryFunctions(TypeFactory* type_factory,
                                           const ZetaSQLBuiltinFunctionOptions& options,
                                           NameToFunctionMap* functions);
