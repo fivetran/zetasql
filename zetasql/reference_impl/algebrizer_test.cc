@@ -1223,7 +1223,7 @@ TEST_F(StatementAlgebrizerTest, CrossApply) {
   // Build the join scan.
   auto join_scan = MakeResolvedJoinScan(
       join_output_columns, ResolvedJoinScan::INNER, std::move(left_table_scan),
-      std::move(right_table_scan), nullptr /* condition */);
+      std::move(right_table_scan), nullptr /* condition */, false);
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_cross_apply(
       algebrizer_->AlgebrizeScan(join_scan.get()).value());
@@ -1369,7 +1369,7 @@ TEST_P(AlgebrizerTestJoins, InnerJoin) {
   // Build the join scan.
   auto join_scan = MakeResolvedJoinScan(
       join_output_columns, ResolvedJoinScan::INNER, std::move(left_table_scan),
-      std::move(right_table_scan), std::move(join_expr));
+      std::move(right_table_scan), std::move(join_expr), false);
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_join(
       algebrizer_->AlgebrizeScan(join_scan.get()).value());
@@ -1469,7 +1469,7 @@ TEST_P(AlgebrizerTestJoins, CorrelatedInnerJoin) {
   // Build the join scan.
   auto join_scan = MakeResolvedJoinScan(
       join_output_columns, ResolvedJoinScan::INNER, std::move(left_table_scan),
-      std::move(filter_scan), std::move(join_expr));
+      std::move(filter_scan), std::move(join_expr), false);
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_join(
       algebrizer_->AlgebrizeScan(join_scan.get()).value());
@@ -1611,7 +1611,8 @@ TEST_P(AlgebrizerTestGroupingAggregation, GroupByCountStar) {
   auto aggregate_scan = MakeResolvedAggregateScan(
       output_columns, std::move(table_scan), std::move(groupby_exprs),
       std::move(aggregate_exprs), {} /* grouping_set_list */,
-      {} /* rollup_column_list */);
+      {} /* rollup_column_list */,
+      {} /* grouping_sets_column_list */);
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_groupby_aggregation(
       algebrizer_->AlgebrizeScan(aggregate_scan.get()).value());
@@ -1659,7 +1660,8 @@ TEST_P(AlgebrizerTestGroupingAggregation, GroupByCountColumn) {
   auto aggregate_scan = MakeResolvedAggregateScan(
       output_columns, std::move(table_scan), std::move(groupby_exprs),
       std::move(aggregate_exprs), {} /* grouping_set_list */,
-      {} /* rollup_column_list */);
+      {} /* rollup_column_list */,
+      {} /* grouping_sets_column_list */);
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_groupby_aggregation(
       algebrizer_->AlgebrizeScan(aggregate_scan.get()).value());
@@ -1710,7 +1712,8 @@ TEST_P(AlgebrizerTestGroupingAggregation, GroupByMax) {
   auto aggregate_scan = MakeResolvedAggregateScan(
       output_columns, std::move(table_scan), std::move(groupby_exprs),
       std::move(aggregate_exprs), {} /* grouping_set_list */,
-      {} /* rollup_column_list */);
+      {} /* rollup_column_list */,
+      {} /* grouping_sets_column_list */);
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_groupby_aggregation(
       algebrizer_->AlgebrizeScan(aggregate_scan.get()).value());
@@ -1762,7 +1765,8 @@ TEST_P(AlgebrizerTestGroupingAggregation, GroupByMin) {
       MakeResolvedAggregateScan(
           output_columns, std::move(table_scan), std::move(groupby_exprs),
           std::move(aggregate_exprs), {} /* grouping_set_list */,
-          {} /* rollup_column_list */);
+          {} /* rollup_column_list */,
+          {} /* grouping_sets_column_list */);
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_groupby_aggregation(
       algebrizer_->AlgebrizeScan(aggregate_scan.get()).value());
@@ -1810,7 +1814,8 @@ TEST_P(AlgebrizerTestGroupingAggregation, GroupBySum) {
       MakeResolvedAggregateScan(
           output_columns, std::move(table_scan), std::move(groupby_exprs),
           std::move(aggregate_exprs), {} /* grouping_set_list */,
-          {} /* rollup_column_list */));
+          {} /* rollup_column_list */,
+          {} /* grouping_sets_column_list */));
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_groupby_aggregation(
       algebrizer_->AlgebrizeScan(aggregate_scan.get()).value());
@@ -1852,7 +1857,8 @@ TEST_P(AlgebrizerTestGroupingAggregation, GroupByAvg) {
       MakeResolvedAggregateScan(
           output_columns, std::move(table_scan), std::move(groupby_exprs),
           std::move(aggregate_exprs), {} /* grouping_set_list */,
-          {} /* rollup_column_list */));
+          {} /* rollup_column_list */,
+          {} /* grouping_sets_column_list */));
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_groupby_aggregation(
       algebrizer_->AlgebrizeScan(aggregate_scan.get()).value());
@@ -1899,7 +1905,8 @@ TEST_P(AlgebrizerTestGroupingAggregation, GroupByAny) {
       MakeResolvedAggregateScan(
           output_columns, std::move(table_scan), std::move(groupby_exprs),
           std::move(aggregate_exprs), {} /* grouping_set_list */,
-          {} /* rollup_column_list */));
+          {} /* rollup_column_list */,
+          {} /* grouping_sets_column_list */));
   // Algebrize the resolved AST and check the result.
   std::unique_ptr<const AlgebraNode> algebrized_groupby_aggregation(
       algebrizer_->AlgebrizeScan(aggregate_scan.get()).value());

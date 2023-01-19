@@ -688,10 +688,10 @@ cc_proto_library(
     deps = [":builtin_function_proto"],
 )
 
-java_proto_library(
-    name = "builtin_function_java_proto",
-    deps = [":builtin_function_proto"],
-)
+# java_proto_library(
+#     name = "builtin_function_java_proto",
+#     deps = [":builtin_function_proto"],
+# )
 
 proto_library(
     name = "deprecation_warning_proto",
@@ -704,10 +704,10 @@ cc_proto_library(
     deps = [":deprecation_warning_proto"],
 )
 
-java_proto_library(
-    name = "deprecation_warning_java_proto",
-    deps = [":deprecation_warning_proto"],
-)
+# java_proto_library(
+#     name = "deprecation_warning_java_proto",
+#     deps = [":deprecation_warning_proto"],
+# )
 
 proto_library(
     name = "function_proto",
@@ -719,10 +719,10 @@ cc_proto_library(
     deps = [":function_proto"],
 )
 
-java_proto_library(
-    name = "function_java_proto",
-    deps = [":function_proto"],
-)
+# java_proto_library(
+#     name = "function_java_proto",
+#     deps = [":function_proto"],
+# )
 
 proto_library(
     name = "parse_resume_location_proto",
@@ -734,10 +734,10 @@ cc_proto_library(
     deps = [":parse_resume_location_proto"],
 )
 
-java_proto_library(
-    name = "parse_resume_location_java_proto",
-    deps = [":parse_resume_location_proto"],
-)
+# java_proto_library(
+#     name = "parse_resume_location_java_proto",
+#     deps = [":parse_resume_location_proto"],
+# )
 
 proto_library(
     name = "options_proto",
@@ -750,10 +750,10 @@ cc_proto_library(
     deps = [":options_proto"],
 )
 
-java_proto_library(
-    name = "options_java_proto",
-    deps = [":options_proto"],
-)
+# java_proto_library(
+#     name = "options_java_proto",
+#     deps = [":options_proto"],
+# )
 
 proto_library(
     name = "simple_table_proto",
@@ -769,10 +769,10 @@ cc_proto_library(
     deps = [":simple_table_proto"],
 )
 
-java_proto_library(
-    name = "simple_table_java_proto",
-    deps = [":simple_table_proto"],
-)
+# java_proto_library(
+#     name = "simple_table_java_proto",
+#     deps = [":simple_table_proto"],
+# )
 
 proto_library(
     name = "simple_constant_proto",
@@ -788,10 +788,10 @@ cc_proto_library(
     deps = [":simple_constant_proto"],
 )
 
-java_proto_library(
-    name = "simple_constant_java_proto",
-    deps = [":simple_constant_proto"],
-)
+# java_proto_library(
+#     name = "simple_constant_java_proto",
+#     deps = [":simple_constant_proto"],
+# )
 
 proto_library(
     name = "parse_location_range_proto",
@@ -803,10 +803,10 @@ cc_proto_library(
     deps = [":parse_location_range_proto"],
 )
 
-java_proto_library(
-    name = "parse_location_range_java_proto",
-    deps = [":parse_location_range_proto"],
-)
+# java_proto_library(
+#     name = "parse_location_range_java_proto",
+#     deps = [":parse_location_range_proto"],
+# )
 
 proto_library(
     name = "type_proto",
@@ -819,10 +819,10 @@ cc_proto_library(
     deps = [":type_proto"],
 )
 
-java_proto_library(
-    name = "type_proto_java_proto",
-    deps = [":type_proto"],
-)
+# java_proto_library(
+#     name = "type_proto_java_proto",
+#     deps = [":type_proto"],
+# )
 
 proto_library(
     name = "type_annotation_proto",
@@ -835,10 +835,10 @@ cc_proto_library(
     deps = [":type_annotation_proto"],
 )
 
-java_proto_library(
-    name = "type_annotation_java_proto",
-    deps = [":type_annotation_proto"],
-)
+# java_proto_library(
+#     name = "type_annotation_java_proto",
+#     deps = [":type_annotation_proto"],
+# )
 
 proto_library(
     name = "value_proto",
@@ -853,10 +853,10 @@ cc_proto_library(
     deps = [":value_proto"],
 )
 
-java_proto_library(
-    name = "value_java_proto",
-    deps = [":value_proto"],
-)
+# java_proto_library(
+#     name = "value_java_proto",
+#     deps = [":value_proto"],
+# )
 
 proto_library(
     name = "type_parameters_proto",
@@ -869,10 +869,10 @@ cc_proto_library(
     deps = [":type_parameters_proto"],
 )
 
-java_proto_library(
-    name = "type_parameters_java_proto",
-    deps = [":type_parameters_proto"],
-)
+# java_proto_library(
+#     name = "type_parameters_java_proto",
+#     deps = [":type_parameters_proto"],
+# )
 
 proto_library(
     name = "collation_proto",
@@ -884,10 +884,10 @@ cc_proto_library(
     deps = [":collation_proto"],
 )
 
-java_proto_library(
-    name = "collation_java_proto",
-    deps = [":collation_proto"],
-)
+# java_proto_library(
+#     name = "collation_java_proto",
+#     deps = [":collation_proto"],
+# )
 
 proto_library(
     name = "type_modifiers_proto",
@@ -903,10 +903,10 @@ cc_proto_library(
     deps = [":type_modifiers_proto"],
 )
 
-java_proto_library(
-    name = "type_modifiers_java_proto",
-    deps = [":type_modifiers_proto"],
-)
+# java_proto_library(
+#     name = "type_modifiers_java_proto",
+#     deps = [":type_modifiers_proto"],
+# )
 
 proto_library(
     name = "error_location_proto",
@@ -923,20 +923,20 @@ cc_proto_library(
     deps = [":formatter_options_proto"],
 )
 
-java_proto_library(
-    name = "formatter_options_java_proto",
-    deps = [":formatter_options_proto"],
-)
+# java_proto_library(
+#     name = "formatter_options_java_proto",
+#     deps = [":formatter_options_proto"],
+# )
 
 cc_proto_library(
     name = "error_location_cc_proto",
     deps = [":error_location_proto"],
 )
 
-java_proto_library(
-    name = "error_location_java_proto",
-    deps = [":error_location_proto"],
-)
+# java_proto_library(
+#     name = "error_location_java_proto",
+#     deps = [":error_location_proto"],
+# )
 
 cc_library(
     name = "error_helpers",
@@ -2054,10 +2054,10 @@ cc_proto_library(
     deps = [":annotation_proto"],
 )
 
-java_proto_library(
-    name = "annotation_java_proto",
-    deps = [":annotation_proto"],
-)
+# java_proto_library(
+#     name = "annotation_java_proto",
+#     deps = [":annotation_proto"],
+# )
 
 proto_library(
     name = "simple_value_proto",
@@ -2069,10 +2069,10 @@ cc_proto_library(
     deps = [":simple_value_proto"],
 )
 
-java_proto_library(
-    name = "simple_value_java_proto",
-    deps = [":simple_value_proto"],
-)
+# java_proto_library(
+#     name = "simple_value_java_proto",
+#     deps = [":simple_value_proto"],
+# )
 
 cc_library(
     name = "lenient_formatter",
