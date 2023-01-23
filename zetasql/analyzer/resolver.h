@@ -1703,6 +1703,7 @@ class Resolver {
       bool has_from_clause,
       const std::shared_ptr<const NameList>& from_clause_name_list,
       QueryResolutionInfo* query_resolution_info,
+      IdString query_alias,
       const Type* inferred_type_for_query = nullptr);
 
   // Performs first pass analysis on a SELECT list expression.
@@ -1714,6 +1715,7 @@ class Resolver {
       const std::shared_ptr<const NameList>& from_clause_name_list,
       int ast_select_column_idx, bool has_from_clause,
       QueryResolutionInfo* query_resolution_info,
+      std::shared_ptr<NameList> select_name_list,
       const Type* inferred_type = nullptr);
 
   // Finishes resolving the SelectColumnStateList after first pass
