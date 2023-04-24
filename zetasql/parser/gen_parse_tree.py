@@ -39,7 +39,7 @@ from zetasql.parser.generator_utils import ScalarType
 from zetasql.parser.generator_utils import Trim
 from zetasql.parser.generator_utils import UpperCamelCase
 
-NEXT_NODE_TAG_ID = 395
+NEXT_NODE_TAG_ID = 397
 
 ROOT_NODE_NAME = 'ASTNode'
 
@@ -8769,7 +8769,7 @@ def main(argv):
 
   gen.AddNode(
       name='ASTSelectWith',
-      tag_id=364,
+      tag_id=395,
       parent='ASTNode',
       comment="""
       Represents SELECT WITH clause.
@@ -8865,7 +8865,7 @@ def main(argv):
 
   gen.AddNode(
       name='ASTGroupingSets',
-      tag_id=389,
+      tag_id=396,
       parent='ASTNode',
       fields=[
           Field(

@@ -3056,7 +3056,9 @@ absl::Status SQLBuilder::VisitResolvedDifferentialPrivacyAggregateScan(
       input_result->query_expression.release());
 
   ZETASQL_RETURN_IF_ERROR(ProcessAggregateScanBase(node, /*rollup_column_id_list=*/{},
-                                           query_expression.get()));
+                                          /*grouping_sets_column_id_list=*/{},
+                                          /*cube_column_id_list=*/{},
+                                          query_expression.get())); 
 
   // We handle the WITH DIFFERENTIAL_PRIVACY clause *after* processing the
   // AggregateScan, because the AggregateScan might introduce a new

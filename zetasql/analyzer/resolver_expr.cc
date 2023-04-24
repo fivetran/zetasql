@@ -1713,15 +1713,15 @@ absl::Status Resolver::ResolvePathExpressionAsExpression(
           auto resolved_column_ref = MakeColumnRefWithCorrelation(
               resolved_column, correlated_columns_sets, access_flags);
           resolved_column.resolved_column_refs->push_back(resolved_column_ref.get());
-          MaybeRecordParseLocation(path_expr, resolved_column_ref.get());
+          MaybeRecordParseLocation(path_expr.GetParseLocationRange(), resolved_column_ref.get());
           resolved_expr = std::move(resolved_column_ref);
           if (expr_resolution_info->query_resolution_info != nullptr &&
               !expr_resolution_info->is_post_distinct()) {
             ZETASQL_RETURN_IF_ERROR(ValidateColumnForAggregateOrAnalyticSupport(
-                resolved_column, first_name, path_expr, expr_resolution_info));
+                resolved_column, first_name, path_expr.first_name(), expr_resolution_info));
           }
           break;
-        }
+        }        
       }
     }
   }
