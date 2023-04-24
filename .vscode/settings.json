@@ -9,5 +9,9 @@
         "libremote",
         "snowsql",
         "zetasql"
-    ]
+    ],
+    "files.associations": {
+        "*.sql": "sql",
+        "__debug": "cpp"
+    }
 }

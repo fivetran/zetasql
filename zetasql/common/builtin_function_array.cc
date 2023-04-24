@@ -246,7 +246,7 @@ void GetArrayMiscFunctions(TypeFactory* type_factory,
           THEN
               ERROR(
                 'ARRAY_FIRST cannot get the first element of an empty array')
-        ELSE input_array[OFFSET(0)]
+        ELSE input_array[DEFAULT_OFFSET(0)]
         END
     )sql";
   InsertFunction(functions, options, "array_first", SCALAR,
@@ -515,17 +515,17 @@ absl::Status GetArrayFindFunctions(
         CASE find_mode
           WHEN 'FIRST'
             THEN (
-              SELECT offset
+              SELECT offset_idx
               FROM UNNEST(input_array) AS e WITH OFFSET
               WHERE e = target_element
-              ORDER BY offset LIMIT 1
+              ORDER BY offset_idx LIMIT 1
             )
           WHEN 'LAST'
             THEN (
-              SELECT offset
+              SELECT offset_idx
               FROM UNNEST(input_array) AS e WITH OFFSET
               WHERE e = target_element
-              ORDER BY offset DESC LIMIT 1
+              ORDER BY offset_idx DESC LIMIT 1
             )
           ELSE
             ERROR(
@@ -548,10 +548,10 @@ absl::Status GetArrayFindFunctions(
       IF(input_array IS NULL OR target_element IS NULL,
         NULL,
         ARRAY(
-          SELECT offset
+          SELECT offset_idx
           FROM UNNEST(input_array) AS e WITH OFFSET
           WHERE e = target_element
-          ORDER BY offset
+          ORDER BY offset_idx
         ))
     )sql";
   InsertFunction(functions, options, "array_offsets", Function::SCALAR,
@@ -571,14 +571,14 @@ absl::Status GetArrayFindFunctions(
               SELECT e
               FROM UNNEST(input_array) AS e WITH OFFSET
               WHERE e = target_element
-              ORDER BY offset LIMIT 1
+              ORDER BY offset_idx LIMIT 1
             )
           WHEN 'LAST'
             THEN (
               SELECT e
               FROM UNNEST(input_array) AS e WITH OFFSET
               WHERE e = target_element
-              ORDER BY offset DESC LIMIT 1
+              ORDER BY offset_idx DESC LIMIT 1
             )
           ELSE
             ERROR(
@@ -604,7 +604,7 @@ absl::Status GetArrayFindFunctions(
           SELECT e
           FROM UNNEST(input_array) AS e WITH OFFSET
           WHERE e = target_element
-          ORDER BY offset
+          ORDER BY offset_idx
         ))
     )sql";
   InsertFunction(

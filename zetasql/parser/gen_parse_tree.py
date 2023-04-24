@@ -855,53 +855,53 @@ def main(argv):
               'ASTHint',
               tag_id=2),
           Field(
+              'top',
+              'ASTTop',
+              tag_id=3),
+          Field(
               'select_with',
               'ASTSelectWith',
-              tag_id=3),
+              tag_id=4),
           Field(
               'anonymization_options',
               'ASTOptionsList',
-              tag_id=4),
+              tag_id=5),
           Field(
               'distinct',
               SCALAR_BOOL,
-              tag_id=5),
+              tag_id=6),
           Field(
               'select_as',
               'ASTSelectAs',
-              tag_id=6),
+              tag_id=7),
           Field(
               'select_list',
               'ASTSelectList',
-              tag_id=7,
+              tag_id=8,
               field_loader=FieldLoaderMethod.REQUIRED),
           Field(
               'from_clause',
               'ASTFromClause',
-              tag_id=8),
+              tag_id=9),
           Field(
               'where_clause',
               'ASTWhereClause',
-              tag_id=9),
+              tag_id=10),
           Field(
               'group_by',
               'ASTGroupBy',
-              tag_id=10),
+              tag_id=11),
           Field(
               'having',
               'ASTHaving',
-              tag_id=11),
+              tag_id=12),
           Field(
               'qualify',
               'ASTQualify',
-              tag_id=12),
+              tag_id=13),
           Field(
               'window_clause',
               'ASTWindowClause',
-              tag_id=13),
-          Field(
-              'top',
-              'ASTTop',
               tag_id=14),
       ])
 

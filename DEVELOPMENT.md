@@ -31,11 +31,11 @@ Running bison with the option `--report=THINGS` will provide you with detailed i
 
 ### Build needed package
 ```
-bazel build //zetasql/analyzer:all --features=-supports_dynamic_linker -c dbg --spawn_strategy=local
+bazel build //zetasql/analyzer:all --features=-supports_dynamic_linker -c dbg --spawn_strategy=local --config=clang
 ```
 or
 ```
-bazel build //zetasql/analyzer:resolver_test --features=-supports_dynamic_linker -c dbg --spawn_strategy=local
+bazel build //zetasql/analyzer:resolver_test --features=-supports_dynamic_linker -c dbg --spawn_strategy=local --config=clang
 ```
 ### Add command to `Execute test` configuration in `launch.json`
 ```
