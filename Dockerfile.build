@@ -44,9 +44,8 @@ ENV BAZEL_ARGS="--config=g++"
 
 RUN cd zetasql                                                              && \
     CC=/usr/bin/gcc CXX=/usr/bin/g++                                           \
-    bazel build ${BAZEL_ARGS} //zetasql/local_service:libremote_server.so //zetasql/local_service:remote_server_executable
+    bazel build ${BAZEL_ARGS} //zetasql/local_service:remote_server_executable
 
 FROM alpine
 ARG TARGETPLATFORM
-COPY --from=linux-builder /zetasql/bazel-bin/zetasql/local_service/libremote_server.so ${TARGETPLATFORM}/libremote_server.so
 COPY --from=linux-builder /zetasql/bazel-bin/zetasql/local_service/remote_server_executable ${TARGETPLATFORM}/remote_server_executable
