@@ -40,8 +40,8 @@ jobs:
         with:
           name: artifacts
           path: |
-            linux_x86_64
-          # linux_arm_64
+            linux_x86_64/
+          # linux_arm_64/
 
   build-macos:
     runs-on: macos-latest
@@ -54,11 +54,6 @@ jobs:
         run: |
           npx @bazel/bazelisk build --copt "-O3" --config=clang //zetasql/local_service:remote_server_executable
 
-      - name: move file to out folder
-        run: |
-          mkdir -p out/darwin/x86_64
-          mv bazel-bin/zetasql/local_service/remote_server_executable out/darwin/x86_64
-
       - name: move file
         run: |
           mkdir -p darwin_x86_64
@@ -69,5 +64,5 @@ jobs:
         with:
           name: artifacts
           path: |
-            darwin_x86_64
+            darwin_x86_64/
             **/*.proto
