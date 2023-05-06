@@ -24,12 +24,11 @@ jobs:
 
       - name: bazel build
         run: |
-          npx @bazel/bazelisk build --features=-supports_dynamic_linker --config=clang --copt "-O3" ${BAZEL_MACOS_CACHE_ARGS} -- //zetasql/local_service:libremote_server.dylib -zetasql/jdk/... -java/... -javatests/...
-          install_name_tool -id "@loader_path/libremote_server.dylib" bazel-bin/zetasql/local_service/libremote_server.dylib
+          npx @bazel/bazelisk build --features=-supports_dynamic_linker --config=clang --copt "-O3" ${BAZEL_MACOS_CACHE_ARGS} -- //zetasql/local_service:remote_server_executable -zetasql/jdk/... -java/... -javatests/...
 
       - name: bazel test
         run: |
-          npx @bazel/bazelisk test --features=-supports_dynamic_linker --config=clang --copt "-O3" ${BAZEL_MACOS_CACHE_ARGS} -- //... -zetasql/jdk/... -java/... -javatests/... -zetasql/local_service:libremote_server.so \
+          npx @bazel/bazelisk test --features=-supports_dynamic_linker --config=clang --copt "-O3" ${BAZEL_MACOS_CACHE_ARGS} -- //... -zetasql/jdk/... -java/... -javatests/... -zetasql/local_service:remote_server_executable \
             -zetasql/analyzer:analyzer_set_operation_test \
             -zetasql/common:multiprecision_int_test \
             -zetasql/public:proto_value_conversion_test \
@@ -41,17 +40,18 @@ jobs:
             -zetasql/reference_impl:reference_compliance_test_minimal_rewrites\
             -zetasql/reference_impl:reference_compliance_test_all_rewrites
 
-      - name: move file to out folder
+      - name: move file
         run: |
           mkdir -p darwin_x86_64
-          mv bazel-bin/zetasql/local_service/libremote_server.dylib darwin_x86_64
+          mv bazel-bin/zetasql/local_service/remote_server_executable darwin_x86_64
 
       - name: upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: artifacts
+          if-no-files-found: error
           path: |
-            darwin_x86_64
+            darwin_x86_64/
             **/*.proto
 
   build-test-linux:
@@ -82,10 +82,19 @@ jobs:
           docker buildx build --file Dockerfile.build --output out --platform linux/amd64 .
           # for linux/arm64 it is very slow and we can't use it now
 
+      - name: move file
+        run: |
+          mkdir -p linux_x86_64
+          mv out/linux/amd64/remote_server_executable linux_x86_64
+          echo '' > nothing.txt
+
       - name: upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: artifacts
+          if-no-files-found: error
           path: |
-            out/linux/amd64
-            # out/linux/arm64
+            nothing.txt  
+            linux_x86_64/
+          # linux_arm_64/
+          # nothing.txt needs to preserve directory structure
