@@ -3810,8 +3810,16 @@ void GetSnowflakeAggregateFunctions(TypeFactory* type_factory,
                                     const ZetaSQLBuiltinFunctionOptions& options,
                                     NameToFunctionMap* functions) {
   const Type* int64_type = type_factory->get_int64();
+  const Type* numeric_type = type_factory->get_numeric();
+  const Type* bool_type = type_factory->get_bool();
+  const Type* bytes_type = type_factory->get_bytes();
+  const Type* float_type = type_factory->get_float();
+  const Type* string_type = type_factory->get_string();
 
   const Function::Mode AGGREGATE = Function::AGGREGATE;
+  const FunctionArgumentType::ArgumentCardinality REPEATED =
+        FunctionArgumentType::REPEATED;
+  const FunctionArgumentType::ArgumentCardinality OPTIONAL = FunctionArgumentType::OPTIONAL;
 
   FunctionArgumentTypeOptions supports_grouping;
   supports_grouping.set_must_support_grouping();
@@ -3826,14 +3834,14 @@ void GetSnowflakeAggregateFunctions(TypeFactory* type_factory,
         {{ARG_TYPE_ANY_1, supports_grouping},
          {int64_type,
           FunctionArgumentTypeOptions()
-              .set_cardinality(FunctionArgumentType::OPTIONAL)
+              .set_cardinality(OPTIONAL)
               .set_is_not_aggregate()
               .set_min_value(1)
               .set_max_value(100000)
               .set_default(Value::Int64(1))},
          {int64_type,
           FunctionArgumentTypeOptions()
-              .set_cardinality(FunctionArgumentType::OPTIONAL)
+              .set_cardinality(OPTIONAL)
               .set_is_not_aggregate()
               .set_max_value(100000)
               .set_default(Value::Int64(10000))}},
@@ -3861,6 +3869,159 @@ void GetSnowflakeAggregateFunctions(TypeFactory* type_factory,
             .set_rejects_collation()}},
       DefaultAggregateFunctionOptions().set_compute_result_type_callback(
           absl::bind_front(&ComputeResultTypeForTopAccumulateStruct, "count")));
+
+  // APPROX_TOP_K_COMBINE
+  InsertFunction(
+      functions, options, "approx_top_k_combine", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, {numeric_type, OPTIONAL}}, FN_APPROX_TOP_K_COMBINE}},
+      DefaultAggregateFunctionOptions());
+
+  // APPROX_TOP_K_ESTIMATE
+  InsertFunction(
+      functions, options, "approx_top_k_estimate", AGGREGATE,
+      {{ARG_ARRAY_TYPE_ANY_1, {ARG_TYPE_ANY_1, {numeric_type, OPTIONAL}}, FN_APPROX_TOP_K_ESTIMATE}},
+      DefaultAggregateFunctionOptions());
+
+  // APPROXIMATE_JACCARD_INDEX
+  InsertFunction(
+      functions, options, "approximate_jaccard_index", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_APPROXIMATE_JACCARD_INDEX}},
+      DefaultAggregateFunctionOptions());
+
+  // APPROXIMATE_SIMILARITY
+  InsertFunction(
+      functions, options, "approximate_similarity", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_APPROXIMATE_SIMILARITY}},
+      DefaultAggregateFunctionOptions());
+
+  // BITAND_AGG
+  InsertFunction(
+      functions, options, "bitand_agg", AGGREGATE,
+      {{numeric_type, {numeric_type}, FN_BITAND_AGG}},
+      DefaultAggregateFunctionOptions());
+
+  // BITOR_AGG
+  InsertFunction(
+      functions, options, "bitor_agg", AGGREGATE,
+      {{numeric_type, {numeric_type}, FN_BITOR_AGG}},
+      DefaultAggregateFunctionOptions());
+
+  // BITXOR_AGG
+  InsertFunction(
+      functions, options, "bitxor_agg", AGGREGATE,
+      {{numeric_type, {numeric_type}, FN_BITXOR_AGG}},
+      DefaultAggregateFunctionOptions());
+
+  // BOOLAND_AGG
+  InsertFunction(
+      functions, options, "booland_agg", AGGREGATE,
+      {{bool_type, {ARG_TYPE_ANY_1}, FN_BOOLAND_AGG}},
+      DefaultAggregateFunctionOptions());
+
+  // BOOLOR_AGG
+  InsertFunction(
+      functions, options, "boolor_agg", AGGREGATE,
+      {{bool_type, {ARG_TYPE_ANY_1}, FN_BOOLOR_AGG}},
+      DefaultAggregateFunctionOptions());
+
+  // BOOLXOR_AGG
+  InsertFunction(
+      functions, options, "boolxor_agg", AGGREGATE,
+      {{bool_type, {ARG_TYPE_ANY_1}, FN_BOOLXOR_AGG}},
+      DefaultAggregateFunctionOptions());
+
+  // GROUPING_ID
+  InsertFunction(
+      functions, options, "grouping_id", AGGREGATE,
+      {{numeric_type, {ARG_TYPE_ANY_1, {ARG_TYPE_ANY_2, REPEATED}}, FN_GROUPING_ID}},
+      DefaultAggregateFunctionOptions());
+
+  // HASH_AGG
+  InsertFunction(
+      functions, options, "hash_agg", AGGREGATE,
+      {{numeric_type, {ARG_TYPE_ANY_1, {ARG_TYPE_ANY_2, REPEATED}}, FN_HASH_AGG}},
+      DefaultAggregateFunctionOptions());
+
+  // HLL
+  InsertFunction(
+      functions, options, "hll", AGGREGATE,
+      {{int64_type, {ARG_TYPE_ANY_1, {ARG_TYPE_ANY_2, OPTIONAL}}, FN_HLL}},
+      DefaultAggregateFunctionOptions());
+
+  // HLL_ACCUMULATE
+  InsertFunction(
+      functions, options, "hll_accumulate", AGGREGATE,
+      {{bytes_type, {ARG_TYPE_ANY_1}, FN_HLL_ACCUMULATE}},
+      DefaultAggregateFunctionOptions());
+
+  // HLL_COMBINE
+  InsertFunction(
+      functions, options, "hll_combine", AGGREGATE,
+      {{bytes_type, {ARG_TYPE_ANY_1}, FN_HLL_COMBINE}},
+      DefaultAggregateFunctionOptions());
+
+  // HLL_ESTIMATE
+  InsertFunction(
+      functions, options, "hll_estimate", AGGREGATE,
+      {{numeric_type, {ARG_TYPE_ANY_1}, FN_HLL_ESTIMATE}},
+      DefaultAggregateFunctionOptions());
+
+  // HLL_EXPORT  
+  InsertFunction(
+      functions, options, "hll_export", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_HLL_EXPORT}},
+      DefaultAggregateFunctionOptions());
+
+  // HLL_IMPORT  
+  InsertFunction(
+      functions, options, "hll_import", AGGREGATE,
+      {{bytes_type, {ARG_TYPE_ANY_1}, FN_HLL_IMPORT}},
+      DefaultAggregateFunctionOptions());
+
+  // KURTOSIS  
+  InsertFunction(
+      functions, options, "kurtosis", AGGREGATE,
+      {{float_type, {ARG_TYPE_ANY_1}, FN_KURTOSIS}},
+      DefaultAggregateFunctionOptions());
+
+  // LISTAGG  
+  InsertFunction(
+      functions, options, "listagg", AGGREGATE,
+      {{string_type, {ARG_TYPE_ANY_1, {string_type, OPTIONAL}}, FN_LISTAGG}},
+      DefaultAggregateFunctionOptions());
+
+  // MEDIAN  
+  InsertFunction(
+      functions, options, "median", AGGREGATE,
+      {{float_type, {ARG_TYPE_ANY_1}, FN_MEDIAN}},
+      DefaultAggregateFunctionOptions());
+
+  // MINHASH  
+  InsertFunction(
+      functions, options, "minhash", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {{int64_type,
+          FunctionArgumentTypeOptions()
+              .set_min_value(1)
+              .set_max_value(1024)}, ARG_TYPE_ANY_1}, FN_MINHASH}},
+      DefaultAggregateFunctionOptions());
+
+  // MINHASH_COMBINE  
+  InsertFunction(
+      functions, options, "minhash_combine", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_MINHASH_COMBINE}},
+      DefaultAggregateFunctionOptions());
+
+  // MODE  
+  InsertFunction(
+      functions, options, "mode", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_MODE}},
+      DefaultAggregateFunctionOptions());
+
+  // OBJECT_AGG  
+  InsertFunction(
+      functions, options, "object_agg", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, ARG_TYPE_ANY_2}, FN_OBJECT_AGG}},
+      DefaultAggregateFunctionOptions());
 
   // REGR_AVGX
   InsertFunction(
@@ -3893,6 +4054,72 @@ void GetSnowflakeAggregateFunctions(TypeFactory* type_factory,
        {int64_type,
         {ARG_TYPE_ANY_1, ARG_TYPE_ANY_2},
         FN_REGR_AVGX_DIFF_ARGS, has_all_evaluated_to_numeric_arguments}},
+      DefaultAggregateFunctionOptions());
+
+  // REGR_INTERCEPT
+  InsertFunction(
+      functions, options, "regr_intercept", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, ARG_TYPE_ANY_1}, FN_REGR_INTERCEPT}},
+      DefaultAggregateFunctionOptions());
+
+  // REGR_R2
+  InsertFunction(
+      functions, options, "regr_r2", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, ARG_TYPE_ANY_1}, FN_REGR_R2}},
+      DefaultAggregateFunctionOptions());
+
+  // REGR_SLOPE
+  InsertFunction(
+      functions, options, "regr_slope", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, ARG_TYPE_ANY_1}, FN_REGR_SLOPE}},
+      DefaultAggregateFunctionOptions());
+
+  // REGR_SXX
+  InsertFunction(
+      functions, options, "regr_sxx", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, ARG_TYPE_ANY_1}, FN_REGR_SXX}},
+      DefaultAggregateFunctionOptions());
+
+  // APPROX_PERCENTILE
+  InsertFunction(
+      functions, options, "approx_percentile", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, ARG_TYPE_ANY_2}, FN_APPROX_PERCENTILE}},
+      DefaultAggregateFunctionOptions());
+
+  // REGR_SYY
+  InsertFunction(
+      functions, options, "regr_syy", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, ARG_TYPE_ANY_1}, FN_REGR_SYY}},
+      DefaultAggregateFunctionOptions());
+
+  // SKEW
+  InsertFunction(
+      functions, options, "skew", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_SKEW}},
+      DefaultAggregateFunctionOptions());
+
+  // VARIANCE_POP
+  InsertFunction(
+      functions, options, "variance_pop", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_VARIANCE_POP}},
+      DefaultAggregateFunctionOptions());
+
+  // APPROX_PERCENTILE_ACCUMULATE
+  InsertFunction(
+      functions, options, "approx_percentile_accumulate", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_APPROX_PERCENTILE_ACCUMULATE}},
+      DefaultAggregateFunctionOptions());
+
+  // APPROX_PERCENTILE_COMBINE
+  InsertFunction(
+      functions, options, "approx_percentile_combine", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1}, FN_APPROX_PERCENTILE_COMBINE}},
+      DefaultAggregateFunctionOptions());
+
+  // APPROX_PERCENTILE_ESTIMATE
+  InsertFunction(
+      functions, options, "approx_percentile_estimate", AGGREGATE,
+      {{ARG_TYPE_ANY_1, {ARG_TYPE_ANY_1, ARG_TYPE_ANY_1}, FN_APPROX_PERCENTILE_ESTIMATE}},
       DefaultAggregateFunctionOptions());
 }
 
