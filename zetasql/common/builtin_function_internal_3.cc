@@ -1423,7 +1423,8 @@ absl::Status GetNumericFunctions(TypeFactory* type_factory,
        {bignumeric_type,
         {bignumeric_type, int64_type},
         FN_TRUNC_WITH_DIGITS_BIGNUMERIC,
-        has_bignumeric_type_argument}});
+        has_bignumeric_type_argument}},
+        FunctionOptions().set_alias_name("truncate"));
   InsertFunction(functions, options, "ceil", SCALAR,
                  {{float_type, {float_type}, FN_CEIL_FLOAT},
                   {double_type, {double_type}, FN_CEIL_DOUBLE},
@@ -1708,6 +1709,18 @@ void GetTrigonometricFunctions(TypeFactory* type_factory,
                        {{double_type, {double_type}, FN_SECH_DOUBLE}});
   InsertSimpleFunction(functions, options, "coth", SCALAR,
                        {{double_type, {double_type}, FN_COTH_DOUBLE}});
+  InsertSimpleFunction(functions, options, "pi", SCALAR,
+                       {{double_type, {}, FN_PI}});
+  InsertSimpleFunction(functions, options, "degrees", SCALAR,
+                       {{double_type, {double_type}, FN_DEGREES}});
+  InsertSimpleFunction(functions, options, "factorial", SCALAR,
+                       {{double_type, {double_type}, FN_FACTORIAL}});
+  InsertSimpleFunction(functions, options, "haversine", SCALAR,
+                       {{double_type, {double_type, double_type, double_type, double_type}, FN_HAVERSINE}});
+  InsertSimpleFunction(functions, options, "radians", SCALAR,
+                       {{double_type, {double_type}, FN_RADIANS}});
+  InsertSimpleFunction(functions, options, "square", SCALAR,
+                       {{double_type, {double_type}, FN_SQUARE}});
 }
 
 absl::Status GetMathFunctions(TypeFactory* type_factory,
