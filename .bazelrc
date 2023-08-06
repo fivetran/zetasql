@@ -36,7 +36,6 @@ build:clang --cxxopt=-Wno-reorder-ctor
 build:clang --cxxopt=-Wno-unused-const-variable
 build:clang --cxxopt=-Wno-unused-function
 build:clang --cxxopt=-Wno-macro-redefined
-build:clang --copt=-Wno-error=unused-but-set-variable
 # By default, we don't suppress any warnings, to get g++-specific warning
 # suppression you can invoke with --config=g++
 build:g++ --action_env=BAZEL_CXXOPTS="-std=c++17"
